@@ -1,0 +1,367 @@
+//try to write a program class name is  //rectangle member functions 
+//set values, area, perimeter
+#include <iostream>
+using namespace std;
+
+class Rectangle
+{
+private:
+	int width, height;
+public:
+	void set_values(int, int);
+	int area() { return width * height; }
+	int perimeter() { return 2 * (width + height); }
+};
+void Rectangle::set_values(int w, int h)
+{
+	width = w;
+	height = h;
+}
+
+int main() {
+	Rectangle rect;
+	rect.set_values(5, 7);
+	cout << "Area: " << rect.area() << endl;
+	cout << "Perimeter: " << rect.perimeter() << endl;
+	system("pause");
+	return 0;
+}
+
+
+
+
+#include <iostream>
+using namespace std;
+void passByValue(int x) {
+	x = 10;
+}
+void passByReference(int& x) {
+	x = 10;
+}
+int main() {
+	int num = 5;	// Passing by value
+	passByValue(num);
+	cout << "After pass by value, num = " << num << endl;
+	// Output: After pass by value, num = 5
+	// Passing by reference
+	passByReference(num);
+	cout << "After pass by reference, num = " << num << endl;
+	// Output: After pass by reference, num = 10
+	system("pause");
+	return 0;
+}
+
+
+////////CONSTRUCTOR
+#include <iostream>
+#include<string>
+using namespace std;
+class Employee
+{
+	 //This is the access modifier.
+public:
+	int employeeId;
+	string employeeName;
+
+	//This is the default Constructor.
+	Employee()
+	{
+		cout << "This is the default constructor" << endl;
+	}
+
+	//Parameterized constructor.
+	Employee(int id, string name)
+	{
+		cout << "Initializing employee with parameters" << endl;
+		employeeId = id;
+		employeeName = name;
+	}
+
+	 //Copy constructor.
+	Employee(Employee &){}
+
+	void printDetails()
+	{
+		cout << "Employee ID is " << employeeId << endl;
+		cout << "Employee Name is " << employeeName<<endl;
+	}
+
+};
+int main()
+{
+	Employee employee1(1, "Michael\n");
+	employee1.printDetails();
+	system("pause");
+	return 0;
+}
+
+
+#include <iostream>
+#include<string>
+using namespace std;
+class Employee
+{
+	// This is the access modifier.
+public:
+	int employeeId;
+	string employeeName;
+
+	//Parameterized constructor.
+	Employee(int id, string name)
+	{
+		cout << "Initializing employee with parameters" << endl;
+		employeeId = id;
+		employeeName = name;
+	}
+
+	void printDetails()
+	{
+		cout << "Employee ID is " << employeeId << endl;
+		cout << "Employee Name is " << employeeName << endl;
+	}
+
+	//This is the destructor. We can write any cleanup code here.
+	~Employee()
+	{
+		cout << "Releasing..." << endl;
+	}
+};
+
+int main()
+{
+	Employee employee1(1, "Michael\n");
+	employee1.printDetails();
+		
+	system("pause");
+	return 0;
+}
+
+//POLYMORFIZM
+//Try to write a program about polymorphism in C++.
+//Base class is Animal
+//And Derived Classes Dog and Cat
+//These animals make different sounds
+
+
+#include <iostream>
+using namespace std;
+
+ //Base class
+class Animal {
+public:
+	virtual void sound() {
+		cout << "This animal makes a sound\n";
+	}
+};
+// Derived class
+class Dog : public Animal {
+public:
+	void sound() {
+		cout << "The dog barks\n";
+	}
+};
+// Derived class
+class Cat : public Animal {
+public:
+	void sound() {
+		cout << "The cat meows\n";
+	}
+};
+
+// Main function
+int main() {
+	Animal *animal;
+	Dog dog;
+	Cat cat;
+
+	// Point to the dog object and call sound
+	animal = &dog;
+	animal->sound();
+
+	// Point to the cat object and call sound
+	animal = &cat;
+	animal->sound();
+	system("pause");
+	return 0;
+}
+#include <iostream>
+using namespace std;
+
+ //Base class
+class Shape {
+public:
+	virtual void draw() {
+		cout << "Drawing a generic shape." << endl;
+	}
+};
+
+ ///Derived classes
+class Circle : public Shape {
+public:
+	void draw() {
+		cout << "Drawing a circle." << endl;
+	}
+};
+
+class Square : public Shape {
+public:
+	void draw() {
+		cout << "Drawing a square." << endl;
+	}
+};
+
+int main() {
+	Shape* shape;
+
+	Circle circle;
+	Square square;
+
+	shape = &circle;
+	shape->draw();
+
+	shape = &square;
+	shape->draw();
+	system("pause");
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class MyClass {
+private:
+	int value;
+public:
+	MyClass(int val) 
+	
+	{
+		value = val;
+	}
+		// Declare the friend function
+	friend void printValue(MyClass obj);
+};
+
+// Define the friend function
+void printValue(MyClass obj) {
+	cout << "The value of MyClass is: " << obj.value << endl;
+}
+
+int main() {
+	MyClass obj1(42);
+	printValue(obj1);
+	system("pause");
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+//base class
+class Animal {
+protected:
+	int age;
+public:
+	Animal(int age) 
+	{
+		this->age = age;
+	}
+	void eat() 
+	{
+		cout << "Animal is eating..." <<endl;
+	}
+};
+
+ //derived class
+class Dog : public Animal {
+public:
+	Dog(int age) : Animal(age) {}
+	void bark() {
+		cout << "Dog is barking..." <<endl;
+	}
+};
+
+int main() {
+	Dog dog(5);
+	dog.eat();
+	dog.bark();
+	system("pause");
+	return 0;
+}
+
+///Example 1: Multi - level Inheritance
+
+#include <iostream>
+using namespace std;
+ //base class
+class Vehicle {
+public:
+	void drive() {
+		cout << "Vehicle is driving..." << endl;
+	}
+};
+
+ //intermediate class
+class Car : public Vehicle {
+public:
+	void honk() {
+		cout << "Car is honking..." << endl;
+	}
+};
+
+ //derived class
+class SportsCar : public Car {
+public:
+	void race() {
+		cout << "Sports car is racing..." << endl;
+	}
+};
+
+int main() {
+	SportsCar car;
+	car.drive();
+	car.honk();
+	car.race();
+	system("pause");
+	return 0;
+}
+
+
+
+
+
+
+////Example 2: Access Specifiers in Inheritance
+////
+#include <iostream>
+using namespace std;
+class Base {
+public:
+	int x;
+protected:
+	int y;
+private:
+	int z;
+};
+class Derived : public Base {
+public:
+	void accessBaseMembers() {
+		x = 1; // can access public members of Base
+		y = 2; // can access protected members of Base
+	     //z = 3; // cannot access private members of Base
+	}
+};
+
+int main() {
+	Derived derived;
+	derived.x = 1; 
+	// public members of Base are accessible from Derived
+//derived.y = 2; 
+	// protected members of Base are not directly accessible from main
+ //derived.z = 3; 
+// private members of Base are not accessible from Derived or main
+	system("pause");
+	return 0;
+}
+
+
