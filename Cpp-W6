@@ -1,0 +1,456 @@
+////Circulary Linked List
+#include <iostream>
+using namespace std;
+
+// Define the node structure
+struct Node {
+	int data;
+	Node *next;
+};
+
+class CircularLinkedList {
+private:
+	Node *tail;
+
+public:
+	// Constructor to initialize the tail to null
+	CircularLinkedList() {
+		tail = NULL;
+	}
+
+	// Function to add a new node to the list
+	void addNode(int value) {
+		Node *temp = new Node;
+		temp->data = value;
+
+		// If the list is empty
+		if (tail == NULL) {
+			tail = temp;
+			temp->next = tail;
+		}
+		// If the list is not empty
+		else {
+			temp->next = tail->next;
+			tail->next = temp;
+			tail = temp;
+		}
+	}
+
+	// Function to display the list
+	void displayList() {
+		// If the list is empty
+		if (tail == NULL) {
+			cout << "List is empty" << endl;
+			return;
+		}
+
+		Node *temp = tail->next;
+		do {
+			cout << temp->data << " ";
+			temp = temp->next;
+		} while (temp != tail->next);
+		cout << endl;
+	}
+};
+
+int main() {
+	CircularLinkedList cll;
+
+	// Adding nodes to the list
+	cll.addNode(1);
+	cll.addNode(2);
+	cll.addNode(3);
+	cll.addNode(4);
+	cll.addNode(20);
+	cll.addNode(10);
+
+	// Displaying the list
+	cll.displayList();
+	system("pause");
+	return 0;
+}
+
+
+
+// CLL - 2 
+#include <iostream>
+using namespace std;
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* addToEmpty(struct Node* last, int data)
+{
+	// This function is only for empty list
+	if (last != NULL)
+		return last;
+
+	// Creating a node dynamically.
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+
+	// Assigning the data.
+	temp->data = data;
+	last = temp;
+
+	// Creating the link.
+	last->next = last;
+	return last;
+}
+
+struct Node* addBegin(struct Node* last, int data)
+{
+	if (last == NULL)
+		return addToEmpty(last, data);
+
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+	temp->data = data;
+	temp->next = last->next;
+	last->next = temp;
+	return last;
+}
+
+struct Node* addEnd(struct Node* last, int data)
+{
+	if (last == NULL)
+		return addToEmpty(last, data);
+
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+
+	temp->data = data;
+	temp->next = last->next;
+	last->next = temp;
+	last = temp;
+
+	return last;
+}
+
+struct Node* addAfter(struct Node* last, int data, int item)
+{
+	if (last == NULL)
+		return NULL;
+
+	struct Node *temp, *p;
+	p = last->next;
+
+	do {
+		if (p->data == item) {
+			temp
+				= (struct Node*)malloc(sizeof(struct Node));
+			temp->data = data;
+			temp->next = p->next;
+			p->next = temp;
+			if (p == last)
+				last = temp;
+			return last;
+		}
+		p = p->next;
+	} while (p != last->next);
+
+	cout << item << " not present in the list." << endl;
+	return last;
+}
+
+void traverse(struct Node* last)
+{
+	struct Node* p;
+
+	// If list is empty, return.
+	if (last == NULL) {
+		cout << "List is empty." << endl;
+		return;
+	}
+
+	// Pointing to first Node of the list.
+	p = last->next;
+
+	// Traversing the list.
+	do {
+		cout << p->data << " ";
+		p = p->next;
+	} while (p != last->next);
+}
+
+
+int main()
+{
+	struct Node* last = NULL;
+	last = addToEmpty(last, 6);
+	last = addBegin(last, 4);
+	last = addBegin(last, 2);
+	last = addEnd(last, 8);
+	last = addEnd(last, 12);
+	last = addAfter(last, 10, 8);
+	last = addAfter(last, 7, 6);
+	last = addAfter(last, 5, 4);
+	last = addEnd(last, 13);
+	last = addAfter(last, 20, 40);
+	traverse(last);
+	system("pause");
+	return 0;
+}
+// CLL - 3
+
+#include <iostream>
+using namespace std;
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* addToEmpty(struct Node* last, int data)
+{
+	// This function is only for empty list
+	if (last != NULL)
+		return last;
+
+	// Creating a node dynamically.
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+
+	// Assigning the data.
+	temp->data = data;
+	last = temp;
+
+	// Creating the link.
+	last->next = last;
+	return last;
+}
+
+struct Node* addBegin(struct Node* last, int data)
+{
+	if (last == NULL)
+		return addToEmpty(last, data);
+
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+	temp->data = data;
+	temp->next = last->next;
+	last->next = temp;
+	return last;
+}
+
+struct Node* addEnd(struct Node* last, int data)
+{
+	if (last == NULL)
+		return addToEmpty(last, data);
+
+	struct Node* temp
+		= (struct Node*)malloc(sizeof(struct Node));
+
+	temp->data = data;
+	temp->next = last->next;
+	last->next = temp;
+	last = temp;
+
+	return last;
+}
+
+struct Node* addAfter(struct Node* last, int data, int item)
+{
+	if (last == NULL)
+		return NULL;
+
+	struct Node *temp, *p;
+	p = last->next;
+
+	do {
+		if (p->data == item) {
+			temp
+				= (struct Node*)malloc(sizeof(struct Node));
+			temp->data = data;
+			temp->next = p->next;
+			p->next = temp;
+			if (p == last)
+				last = temp;
+			return last;
+		}
+		p = p->next;
+	} while (p != last->next);
+
+	cout << item << " not present in the list." << endl;
+	return last;
+}
+
+void traverse(struct Node* last)
+{
+	struct Node* p;
+
+	// If list is empty, return.
+	if (last == NULL) {
+		cout << "List is empty." << endl;
+		return;
+	}
+
+	// Pointing to first Node of the list.
+	p = last->next;
+
+	// Traversing the list.
+	do {
+		cout << p->data << " ";
+		p = p->next;
+	} while (p != last->next);
+}
+
+
+// Returns the new last node of the list.
+struct Node* removeNode(struct Node* last, int key)
+{
+	if (last == NULL) // List is empty
+		return NULL;
+
+	struct Node* curr = last->next; // Starting from the first node
+	struct Node* prev = last; // Keeping track of the previous node
+	bool found = false;
+
+	// Traversing the list to find the node with the key
+	do {
+		if (curr->data == key) {
+			found = true;
+			break;
+		}
+		prev = curr;
+		curr = curr->next;
+	} while (curr != last->next);
+
+	if (found) {
+		// Removing the node from the list
+		prev->next = curr->next;
+		free(curr);
+		// Updating the last node of the list
+		if (curr == last)
+			last = prev;
+		return last;
+	}
+	else {
+		// Node with the given key was not found in the list
+		cout << key << " not present in the list." << endl;
+		return last;
+	}
+}
+
+int main()
+{
+	struct Node* last = NULL;
+	last = addToEmpty(last, 6);
+	last = addBegin(last, 4);
+	last = addBegin(last, 2);
+	last = addEnd(last, 8);
+	last = addEnd(last, 12);
+	last = addAfter(last, 10, 8);
+	last = addAfter(last, 7, 6);
+	last = addAfter(last, 5, 4);
+	last = addEnd(last, 13);
+
+	last = removeNode(last, 8);
+	last = removeNode(last,2);
+	last = removeNode(last, 13);
+	last = addEnd(last, 15);
+	last = addAfter(last, 11, 10);
+last = removeNode(last, 4);
+	traverse(last);
+	system("pause");
+	return 0;
+}
+
+
+
+////RECURSION TRACE 
+#include <iostream>
+using namespace std;
+int factorial(int n, int depth) {
+	// Print the current function call and its depth
+	cout << "factorial(" << n << "), depth=" << depth << endl;
+
+	if (n == 0 || n == 1) {
+		return 1;
+	}
+	else {
+		int result = n * factorial(n - 1, depth + 1);
+		// Print the result and depth when the function call returns
+		cout << "factorial(" << n << ") returned " << result << ", depth=" << depth << endl;
+		return result;
+	}
+}
+
+int main() {
+	int n = 7;
+	int result = factorial(n, 0);
+	cout << "factorial(" << n << ") = " << result << endl;
+	system("pause");
+	return 0;
+}
+
+
+
+//RECURSION TRACE - 2
+#include <iostream>
+using namespace std;
+int sumOfDigits(int n, int depth) {
+	 //Print the current function call and its depth
+	cout << "sumOfDigits(" << n << "), depth=" << depth << endl;
+	if (n == 0) {
+		return 0;
+	}
+	else {
+		int digit = n % 10;
+		int sum = digit + sumOfDigits(n / 10, depth + 1);
+		 //Print the sum and depth when the function call returns
+		cout << "sumOfDigits(" << n << ") returned " << sum << ", depth=" << depth << endl;
+		return sum;
+	}
+}
+
+int main() {
+	int n = 123456;
+	int result = sumOfDigits(n, 0);
+	cout << "sumOfDigits(" << n << ") = " << result << endl;
+	system("pause");
+	return 0;
+}
+//RECURSION TRACE - 3
+#include <iostream>
+using namespace std;
+
+int findMax(int arr[], int size, int depth) {
+	// Print the current depth and array elements
+	for (int i = 0; i < depth; i++) {
+		cout << " ";
+	}
+	cout << "depth: " << depth << ", arr: [ ";
+	for (int i = 0; i < size; i++) {
+		cout << arr[i] << " ";
+	}
+	cout << "]" << endl;
+
+	// Base case
+	if (size == 0) {
+		return arr[0];
+	}
+
+	// Recursive case
+	int subMax = findMax(arr, size - 1, depth + 1);
+	if (arr[size - 1] > subMax) {
+		subMax = arr[size - 1];
+	}
+	// Print the maximum value in this depth
+	for (int i = 0; i < depth; i++) {
+		cout << " ";
+	}
+	cout << "max value in depth " << depth << ": " << subMax << endl;
+	return subMax;
+}
+
+int main() {
+	int arr[] = { 1, 4, 3, 5, 2, 6, 0, 2, 7, 4 };
+	int size = sizeof(arr) / sizeof(arr[0]);
+	int result = findMax(arr, size, 0);
+	cout << "The maximum number in the array is " << result << endl;
+	system("pause");
+	return 0;
+}
