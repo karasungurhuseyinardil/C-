@@ -1,0 +1,448 @@
+//// TAIL RECURSION
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+int sum(int n, int acc) {
+	if (n == 0) {
+		return acc;
+	}
+	else {
+		return sum(n - 1, acc + n);
+	}
+}
+
+int sum_iter(int n) {
+	stack<pair<int, int>> s;
+	s.push(make_pair(n, 0));
+	while (!s.empty()) 
+	{
+		auto p = s.top();
+		s.pop();
+		int num = p.first;
+		int acc = p.second;
+		if (num == 0) {
+			return acc;
+		}
+		else {
+			s.push(make_pair(num - 1, acc + num));
+		}
+	}
+}
+
+int main() {
+	int n = 5;
+	cout << "Sum of " << n << " numbers: " << sum(n, 0) << endl;
+	cout << "Sum of " << n << " numbers (iterative): " << sum_iter(n) << endl;
+	system("pause");
+	return 0;
+}
+
+
+///////// STACK USING ARRAY
+#include <iostream>
+using namespace std;
+int stack[100], n = 100, top = -1;
+
+
+void push(int val) 
+{
+	if (top >= n - 1)
+		cout << "Stack Overflow" << endl;
+	else {
+		top++;
+		stack[top] = val;
+	}
+}
+
+
+void pop() {
+	if (top <= -1)
+		cout << "Stack Underflow" << endl;
+	else {
+		cout << "The popped element is " << stack[top] << endl;
+		top--;
+	}
+}
+
+void display() {
+	if (top >= 0)
+	{
+		cout << "Stack elements are:";
+
+		for (int i = top; i >= 0; i--)
+			cout << stack[i] << " ";
+
+		cout << endl;
+	}
+	else
+		cout << "Stack is empty";
+}
+int main() 
+{
+	int ch, val;
+	cout << "1) Push in stack" << endl;
+	cout << "2) Pop from stack" << endl;
+	cout << "3) Display stack" << endl;
+	cout << "4) Exit" << endl;
+	do {
+		cout << "Enter choice: " << endl;
+		cin >> ch;
+		switch (ch) {
+		case 1: {
+					cout << "Enter value to be pushed:" << endl;
+					cin >> val;
+					push(val);
+					break;
+		}
+		case 2: {
+					pop();
+					break;
+		}
+		case 3: {
+					display();
+					break;
+		}
+		case 4: {
+					cout << "Exit" << endl;
+					break;
+		}
+		default: {
+					 cout << "Invalid Choice" << endl;
+		}
+		}
+	} while (ch != 4);
+	system("pause");
+	return 0;
+}
+
+////// BINARY RECURSION
+#include <iostream> 
+using namespace std;
+
+int binarySearch(int arr[], int left, int right, int x) {
+
+	while (left <= right)
+			{
+		int mid = left + (right - left) / 2;
+		
+		if (arr[mid] == x) {
+			// If the middle element is the target element, return its index 
+			return mid;
+		}
+		
+		if (arr[mid] < x) {
+
+			// If the target element is greater than the middle element, 
+
+			//search in the right half 
+
+			left = mid + 1;
+
+		} 
+
+		else {
+
+			// If the target element is smaller than the middle element, 
+
+			//search in the left half 
+
+			right = mid - 1;
+
+		}
+
+	}
+
+	return -1; // If the target element is not found, return -1 
+
+}
+
+int main()
+{
+	int arr[] = { 2, 3, 5, 7, 8, 9 }; // Example sorted array 
+
+	int n = sizeof(arr) / sizeof(arr[0]);
+
+	int target = 5;
+
+	int index = binarySearch(arr, 0, n - 1, target);
+
+	if (index == -1) {
+
+		cout << "Target element not found in the array" << endl;
+
+	}
+	else {
+
+		cout << "Target element found at index: " << index << endl;
+
+	}
+
+	system("pause");
+	return 0;
+
+}
+////N - Queens Problem :
+////
+////The N - Queens problem is a classic puzzle 
+////that involves placing N chess queens on an N×N chessboard 
+////so that no two queens threaten each other.
+////
+////That is, no two queens can be in the same row, column, or diagonal.
+
+/////////MULTIPLE RECURSION
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool isSafe(vector<vector<int>>& board, int row, int col, int n)
+{
+	// Check if there is a queen in the same row
+	for (int i = 0; i < col; i++) 
+	{
+		if (board[row][i] == 1)
+		{
+			return false;
+		}
+	}
+
+	// Check if there is a queen in the upper left diagonal
+	for (int i = row, j = col  ; i >= 0 && j >= 0 ; i--, j--)
+	{
+		if (board[i][j] == 1) 
+		{
+			return false;
+		}
+	}
+		// Check if there is a queen in the lower left diagonal
+	for (int i = row, j = col;   i < n  && j >= 0 ; i++, j--) 
+	{
+		if (board[i][j] == 1) 
+		{
+			return false;
+		}
+	}
+
+	// It's safe to place a queen here
+	return true;
+}
+
+bool solveNQueens(vector<vector<int>>& board, int col, int n)
+{
+	// Base case: all queens are placed
+	if (col == n)
+	{
+		return true;
+	}
+
+	// Recursive case: try to place the queen in the current column
+	for (int row = 0; row < n; row++)
+	{
+		if (isSafe(board, row, col, n)) 
+		{
+			// Place the queen
+			board[row][col] = 1;
+			// Recursively place the remaining queens
+			if (solveNQueens(board, col + 1, n)) 
+			{
+				return true;
+			}
+			// Backtrack: remove the queen from this cell
+			board[row][col] = 0;
+		}
+	}
+
+	// Unable to place the queen in any row in this column
+	return false;
+}
+
+int main() {
+	int n = 10; // Board size
+	vector<vector<int>> board(n, vector<int>(n, 0)); // Initialize the board
+
+	if (solveNQueens(board, 0, n)) 
+	{
+		// Print the solution
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				cout << board[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+	else {
+		cout << "No solution found." << endl;
+	}
+	system("pause");
+	return 0;
+}
+LIST
+C++ List is the inbuilt sequence containers that allow non-contiguous memory allocation. 
+The list doesn’t provide fast random access, and it only supports sequential access in both directions. 
+The list is a sequence container available with STL(Standard Template Library) in C++. 
+By default, the list is a doubly-linked list. Since it is a doubly-linked list, the insertion and deletion are fast on the list.
+It uses non-contiguous memory allocation, so traversal is slow compared to  vector in C++.
+The list allows insertion and deletion operation anywhere within a sequence in constant time.
+Elements of the list can be scattered in the different chunks of memory. Container stores the necessary information to allow sequential access to its data.
+C++ Lists can shrink or expand as needed from both ends at run time. 
+The storage requirement is fulfilled automatically by the internal allocator.
+Zero-sized lists are also valid. In that case list.begin() and list.end() points to the same location. But the behavior of calling front() or back() is undefined.
+
+
+Functions used with List in C++
+push_back()
+Used for adding a new element at the end of a list. Suppose the list is L and we want to insert an element at its end. It can be done like this.
+L.push_back(element);
+push_front()
+Used for adding a new element at the start of a list. Suppose the list is L and we want to insert an element at its front. It can be done like this.
+L.push_front(element);
+pop_back()
+Used for removing an element from the end of the list. Reduces the size of the list by one. Suppose the list is L. It can be done like this.
+L.pop_back();
+pop_front()
+Used for removing an element from the start of the list. Reduces the size of the list by one. Suppose the list is L. It can be done like this.
+L.pop_front();
+front()
+ It returns the first element from the list. So if we want to check the value of the first element of the list, it can be used.
+L.front();
+back()
+It returns the last element from the list. So if we want to check the value of the last element of the list, it can be used.
+L.back();
+empty()
+It returns 1 if the list is empty otherwise it returns 0.
+L.empty();
+insert()
+Used to insert the elements at any position of the list. It takes three parameters position, several elements to insert and value to insert. By default, the number of elements is set to 1.
+L.insert(iterator, num_of_elements, element);
+erase()
+Used to erase one element or a range of elements from the list. To delete one element just an integer position is passed and that will be deleted. To delete a range starting iterator and ending iterator needs to be passed.
+L.erase(list_iterator); // to delete one element
+
+L.erase(start_iterator, last_iterator); // for range
+assign()
+It is used to assign new elements to list by replacing current elements and resizes the list. Two parameters -> number of values to be assigned and second is the value to be assigned.
+L.assign(number of times, value);
+remove()
+It takes a value as a parameter and removes all the elements having this value from the list.
+L.remove(value);
+reverse()
+As the name tells, it reverses the order of elements in the list.
+L.reverse();
+size()
+It returns the number of elements present in the list.
+L.size();
+begin()
+It returns the iterator to the first element in the list.
+List <data_type>::iterator = L.begin();
+end()
+It returns the iterator pointing to the theoretical last element, which follows the last element.
+L.end();
+sort()
+It is used to sort the elements of a list in increasing order.
+L.sort();
+
+clear()
+It is used to remove all the elements of the list container. So the size of the list becomes 0.
+L.clear();
+
+////// LIST
+#include <iostream>
+#include <list>
+using namespace std;
+
+void showTheContent(list<int> l)
+{
+	list<int>::iterator it;
+	for (it = l.begin(); it != l.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << "\n";
+}
+
+int main()
+{
+	list<int> list1, list2;
+	int i;
+	// inserting at the back
+	for (i = 0; i<10; i++)
+		list1.push_back(i + 1);
+
+	// inserting at the front
+	for (i = 0; i<10; i++)
+		list2.push_front(i + 1);
+
+	cout << "Content of List 1: ";
+	showTheContent(list1);
+	cout << "Content of list 2: ";
+	showTheContent(list2);
+
+	 //sorting the second list
+	list2.sort();
+	cout << "Sorted List2 : ";
+	showTheContent(list2);
+
+	//Removing five elements from front in list1.
+	int times = 5;
+	while (times--)
+	{
+		list1.pop_front();
+	}
+	cout << "Content of List 1: ";
+	showTheContent(list1);
+	//Removing five elements from the back in list2.
+	times = 5;
+	while (times--)
+	{
+		list2.pop_back();
+	}
+	cout << "Content of List 2: ";
+	showTheContent(list2);
+
+	//seek the first element of list 1
+	cout << list1.front() << " is now at the front in list 1\n";
+	//seek the last element in list 2
+	cout << list2.back() << " is now the last element in list 2\n";
+
+	//Inserting elements in list 1.
+	list1.insert(list1.begin(), 5, 10);
+	cout << "After Insertion list 1: ";
+	showTheContent(list1);
+
+	//remove() to remove all the elements with value 10.
+	list1.remove(10);
+	cout << "After Removal list 1: ";
+	showTheContent(list1);
+
+	//// size() to know the number of elements
+	cout << "No. of elements in list 1: ";
+	cout << list1.size() << "\n";
+
+	//Reversing the content of list 2
+	list2.reverse();
+	cout << "Reversed list 2: ";
+	showTheContent(list2);
+
+	//erasing first element of list 2
+	list2.erase(list2.begin());
+	cout << "After erasing from list 2: ";
+	showTheContent(list2);
+
+	////Removing all elements from list 1.
+	list1.clear();
+	//// Use of empty() function
+	if (list1.empty()) cout << "List 1 is now empty\n";
+	else cout << "Not Empty\n";
+
+	//// use of assign function
+	list1.assign(5, 2); // 2 2 2 2 2
+   	cout << "List 1: ";
+    showTheContent(list1);
+
+	system("pause");
+	return 0;
+}
+
+
