@@ -1,0 +1,511 @@
+//1- VECTORS
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+	//Create an empty vector of integers
+		vector<int> numbers;
+
+	//Add elements to the vector using push_back()
+	numbers.push_back(10);
+	numbers.push_back(20);
+	numbers.push_back(30);
+	numbers.push_back(40);
+
+	//Accessing elements of the vector
+		cout << "Elements of the vector: ";
+	for (int i = 0; i < numbers.size(); i++) 
+	{
+		cout << numbers[i] << " ";
+	}
+	cout << endl;
+
+	//Accessing elements using iterators
+		cout << "Elements of the vector using iterators: ";
+
+	for (auto it = numbers.begin(); it != numbers.end(); ++it)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+
+	//Inserting an element at a specific position
+		numbers.insert(numbers.begin() + 2, 25);
+
+	//Removing an element from the vector
+		numbers.pop_back();
+
+	//Updating an element in the vector
+		numbers[1] = 50;
+
+	//Accessing elements using range - based for loop
+		cout << "Elements of the vector using range-based for loop: ";
+	for (int num : numbers) 
+	{
+		cout << num << " ";
+	}
+	cout << endl;
+
+	//Checking if the vector is empty
+	if (numbers.empty()) {
+		cout << "Vector is empty." << endl;
+	}
+	else {
+		cout << "Vector is not empty." << endl;
+	}
+	//Checking the size of the vector
+		cout << "Size of the vector : " << numbers.size() << endl;
+
+	//Clearing the vector
+		numbers.clear();
+
+	//Checking the size of the vector
+		cout << "Size of the vector after clearing: " << numbers.size()
+ << endl;
+
+	system("pause");
+	return 0;
+}
+
+
+////2- TREES
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<typename T>
+class TreeNode {
+public:
+	T data;
+	TreeNode<T>* parent;
+	vector<TreeNode<T>*> children;
+
+	TreeNode(const T& value) : data(value), parent(nullptr) {}
+
+	void addChild(TreeNode<T>* child) 
+	{
+		child->parent = this;
+		children.push_back(child);
+	}
+};
+
+template<typename T>
+class Tree {
+private:
+	TreeNode<T>* root;
+
+public:
+	Tree() : root(nullptr) {}
+
+	void setRoot(TreeNode<T>* node) 
+	{
+		root = node;
+	}
+
+	TreeNode<T>* parent(TreeNode<T>* node)
+	{
+		return node->parent;
+	}
+
+	vector<TreeNode<T>*> children(TreeNode<T>* node) 
+	{
+		return node->children;
+	}
+
+	bool isRoot(TreeNode<T>* node)
+	{
+		return node == root;
+	}
+
+	bool isExternal(TreeNode<T>* node) 
+	{
+		return node->children.empty();
+	}
+
+	bool isInternal(TreeNode<T>* node) 
+	{
+		return !node->children.empty();
+	}
+};
+
+int main() {
+	Tree<int> tree;
+
+	TreeNode<int>* root = new TreeNode<int>(1);
+	tree.setRoot(root);
+
+	TreeNode<int>* node2 = new TreeNode<int>(2);
+	TreeNode<int>* node3 = new TreeNode<int>(3);
+	TreeNode<int>* node4 = new TreeNode<int>(4);
+
+	root->addChild(node2);  
+	root->addChild(node3);
+	node3->addChild(node4);
+
+cout << "Is node4 a root node? " << (tree.isRoot(node4) ? "Yes" : "No") << endl;
+
+cout << "Is node2 an external node? " << (tree.isExternal(node2) ? "Yes" : "No") << endl;
+
+cout << "Is node3 an internal node? " << (tree.isInternal(node3) ? "Yes" : "No") << endl;
+
+
+	cout << "Parent of node2: ";
+	if (tree.parent(node2) != nullptr) 
+	{
+		cout << tree.parent(node2)->data << endl;
+	}
+	else {
+		cout << "None" << endl;
+	}
+
+	cout << "Parent of node4: ";
+	if (tree.parent(node4) != nullptr)
+	{
+		cout << tree.parent(node4)->data << endl;
+	}
+	else {
+		cout << "None" << endl;
+	}
+
+
+	delete node4;
+	delete node3;
+	delete node2;
+	delete root;
+	system("pause");
+	return 0;
+}
+
+
+
+/////3- TREES
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<typename T>
+class TreeNode {
+public:
+	T data;
+	TreeNode<T>* parent;
+	vector<TreeNode<T>*> children;
+
+	TreeNode(const T& value) : data(value), parent(nullptr) {}
+
+	void addChild(TreeNode<T>* child) {
+		child->parent = this;
+		children.push_back(child);
+	}
+};
+
+template<typename T>
+class Tree {
+private:
+	TreeNode<T>* root;
+
+public:
+	Tree() : root(nullptr) {}
+
+	void setRoot(TreeNode<T>* node)
+	{
+		root = node;
+	}
+
+	TreeNode<T>* parent(TreeNode<T>* node) 
+	{
+		return node->parent;
+	}
+
+	vector<TreeNode<T>*> children(TreeNode<T>* node) 
+	{
+		return node->children;
+	}
+
+	bool isRoot(TreeNode<T>* node) 
+	{
+		return node == root;
+	}
+
+	bool isExternal(TreeNode<T>* node)
+	{
+		return node->children.empty();
+	}
+
+	bool isInternal(TreeNode<T>* node)
+	{
+		return !node->children.empty();
+	}
+
+
+	int size() 
+	{
+		return sizeHelper(root);
+	}
+
+	bool empty() 
+	{
+		return root == nullptr;
+	}
+
+	TreeNode<T>* getRoot()
+	{
+		return root;
+	}
+
+	vector<TreeNode<T>*> positions()
+	{
+		vector<TreeNode<T>*> nodes;
+		positionsHelper(root, nodes);
+		return nodes;
+	}
+
+private:
+	int sizeHelper(TreeNode<T>* node)
+	{
+		if (node == nullptr) 
+		{
+			return 0;
+		}
+		
+		int count = 1;
+
+		for (TreeNode<T>* child : node->children) 
+		{
+			count += sizeHelper(child);
+		}
+
+		return count;
+	}
+
+	void positionsHelper(TreeNode<T>* node, vector<TreeNode<T>*>& nodes) 
+	{
+		if (node == nullptr) {
+			return;
+		}
+
+		nodes.push_back(node);
+		for (TreeNode<T>* child : node->children) 
+		{
+			positionsHelper(child, nodes);
+		}
+	}
+};
+
+int main() {
+	Tree<int> tree;
+
+	TreeNode<int>* root = new TreeNode<int>(1);
+	tree.setRoot(root);
+
+	TreeNode<int>* node2 = new TreeNode<int>(2);
+	TreeNode<int>* node3 = new TreeNode<int>(3);
+	TreeNode<int>* node4 = new TreeNode<int>(4);
+	TreeNode<int>* node5 = new TreeNode<int>(5);
+	TreeNode<int>* node6 = new TreeNode<int>(6);
+
+	root->addChild(node2);
+	root->addChild(node3);
+	node2->addChild(node4);
+	node3->addChild(node5);
+	node3->addChild(node6);
+
+	cout << "Size of the tree: " << tree.size() << endl;
+
+	cout << "Is the tree empty? " << (tree.empty() ? "Yes" : "No") << endl;
+
+	cout << "Root node value: " << tree.getRoot()->data << endl;
+
+	cout << "Positions in the tree: ";
+
+	vector<TreeNode<int>*> positions = tree.positions();
+
+	for (TreeNode<int>* node : positions)
+	{
+		cout << node->data << " ";
+	}
+	cout << endl;
+
+	delete node6;
+	delete node5;
+	delete node4;
+	delete node3;
+	delete node2;
+	delete root;
+	system("pause");
+	return 0;
+}
+
+
+//4 TRAVERSE
+
+#include <iostream>
+using namespace std;
+
+// Definition of a binary tree node
+struct Node {
+	int data;
+	Node* left;
+	Node* right;
+};
+
+// Function to create a new node
+Node* createNode(int data) 
+{
+	Node* newNode = new Node();
+	if (!newNode)
+	{
+		cout << "Memory error\n";
+		return nullptr;
+	}
+
+	newNode->data = data;
+	newNode->left = newNode->right = nullptr;
+	return newNode;
+}
+
+// Function to perform preorder traversal
+void preorder(Node* root) {
+	if (root == nullptr)
+		return;
+
+	cout << root->data << " ";  
+	preorder(root->left);
+	preorder(root->right);
+}
+
+// Function to perform inorder traversal
+void inorder(Node* root) {
+	if (root == nullptr)
+		return;
+
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+// Function to perform postorder traversal
+void postorder(Node* root) {
+	if (root == nullptr)
+		return;
+
+	postorder(root->left);
+	postorder(root->right);
+	cout << root->data << " ";
+}
+
+int main() {
+	// Create a binary tree
+	Node* root = createNode(1);
+	root->left = createNode(2);
+	root->right = createNode(3);
+	root->left->left = createNode(4);
+	root->left->right = createNode(5);
+
+	cout << "Preorder traversal: ";
+	preorder(root);
+	cout << "\n";
+
+	cout << "Inorder traversal: ";
+	inorder(root);
+	cout << "\n";
+
+	cout << "Postorder traversal: ";
+	postorder(root);
+	cout << "\n";
+	system("pause");
+	return 0;
+}
+
+
+////5 - edge
+
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+// Node structure for the tree
+struct TreeNode {
+	int data;
+	list<TreeNode*> children;
+};
+
+// Function to create a new tree node
+TreeNode* createNode(int data) 
+{
+	TreeNode* newNode = new TreeNode();
+	newNode->data = data;
+	return newNode;
+}
+
+// Function to add an edge between two nodes
+void addEdge(TreeNode* parent, TreeNode* child) 
+{
+	parent->children.push_back(child);
+}
+
+
+// Function to find all paths in the tree
+void findAllPaths(TreeNode* node, vector<int>& currentPath, vector<vector<int>>& allPaths)
+ {
+	if (node == nullptr)
+		return;
+	currentPath.push_back(node->data);
+
+	if (node->children.empty()) 
+	{
+		allPaths.push_back(currentPath);
+	}
+
+	else {
+		for (TreeNode* child : node->children)
+		{
+			findAllPaths(child, currentPath, allPaths);
+
+		}
+	}
+	currentPath.pop_back();
+}
+
+
+
+int main() 
+{
+	// Create nodes for the tree
+	TreeNode* root = createNode(1);
+	TreeNode* node2 = createNode(2);
+	TreeNode* node3 = createNode(3);
+	TreeNode* node4 = createNode(4);
+	TreeNode* node5 = createNode(5);
+	TreeNode* node6 = createNode(6);
+
+	// Create edges between nodes
+	addEdge(root, node2);   
+	addEdge(root, node3);
+	addEdge(node2, node4);
+	addEdge(node2, node5);
+	addEdge(node3, node6);
+
+	// Find all paths in the tree
+	vector<int> currentPath;
+	vector<vector<int>> allPaths;
+	findAllPaths(root, currentPath, allPaths);
+
+	// Print all paths
+	cout << "All paths in the tree:\n";
+	for (const auto& path : allPaths) 
+	{
+		for (int nodeData : path) 
+		{
+			cout << nodeData << " -> ";
+		}
+		cout << "null\n";
+	}
+	system("pause");
+	return 0;
+}
