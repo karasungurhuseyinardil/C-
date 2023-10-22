@@ -1,0 +1,160 @@
+///// 2 - evaluating expressions
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+// Node structure for expression tree
+struct Node {
+	string data;       
+	Node* left;     
+	Node* right;
+
+	Node(string value) {
+		data = value;
+		left = nullptr;
+		right = nullptr;
+	}
+};
+
+// Function to check if a string is an operator
+bool isOperator(string str) {
+	return (str == "+" || str == "-" || str == "*" || str == "/");
+}
+
+// Function to check if a character is an opening parenthesis
+bool isOpeningParenthesis(char ch) {
+	return (ch == '(');
+}
+
+// Function to check if a character is a closing parenthesis
+bool isClosingParenthesis(char ch) {
+	return (ch == ')');
+}
+
+// Function to evaluate arithmetic expressions
+int evaluateExpression(Node* root) {
+	if (root == nullptr)
+		return 0;
+
+	// If the current node is a leaf node (operand), 
+	//convert the string to an integer and return
+	if (!isOperator(root->data))
+		return stoi(root->data);
+
+	// Evaluate the left and right subtrees
+	int leftOperand = evaluateExpression(root->left);
+
+	int rightOperand = evaluateExpression(root->right);
+
+	// Perform the corresponding arithmetic operation
+	if (root->data == "+")
+		return leftOperand + rightOperand;
+
+	else if (root->data == "-")
+		return leftOperand - rightOperand;
+
+	else if (root->data == "*")
+		return leftOperand * rightOperand;
+
+	else if (root->data == "/")
+		return leftOperand / rightOperand;
+
+	return 0; // Default return value
+}
+
+// Function to build an expression tree from an infix expression
+Node* buildExpressionTree(string infixExpression) {
+	stack<Node*> stk;
+	string postfixExpression;
+
+	// Process each character in the infix expression
+	for (char ch : infixExpression) {
+		// If the character is an operand, append it to the postfix expression
+		if (isalnum(ch)) {
+			postfixExpression += ch;
+		}
+		// If the character is an opening parenthesis, push it onto the stack
+		else if (isOpeningParenthesis(ch)) {
+			stk.push(new Node(string(1, ch)));
+		}
+		// If the character is a closing parenthesis, 
+		//pop the stack until an opening parenthesis is found
+		else if (isClosingParenthesis(ch)) 
+		{
+			while (!stk.empty() && !isOpeningParenthesis(stk.top()->data[0])) 
+			{
+				postfixExpression += stk.top()->data;
+				stk.pop();
+			}
+			stk.pop(); // Remove the opening parenthesis from the stack
+		}
+		// If the character is an operator, 
+		//pop operators from the stack and append them to the postfix expression
+		// based on their precedence
+		else if (isOperator(string(1, ch)))
+		{
+	
+	while (!stk.empty() && !isOpeningParenthesis(stk.top()->data[0]) &&
+	(ch == '*' || ch == '/') && (stk.top()->data == "+" || stk.top()->data == "-")) 
+     {
+				postfixExpression += stk.top()->data;
+				stk.pop();
+			}
+			stk.push(new Node(string(1, ch)));
+		}
+	}
+
+	// Pop any remaining operators from the stack and append them to the postfix expression
+	while (!stk.empty()) 
+	{
+		postfixExpression += stk.top()->data;
+		stk.pop();
+	}
+
+	// Build the expression tree using the postfix expression
+	stack<Node*> expressionStk;
+	for (char ch : postfixExpression)
+
+	{
+		if (isOperator(string(1, ch))) 
+		{
+			Node* newNode = new Node(string(1, ch));
+
+			newNode->right = expressionStk.top();
+			expressionStk.pop();
+
+			newNode->left = expressionStk.top();
+			expressionStk.pop();
+
+			expressionStk.push(newNode);
+		}
+		else {
+			Node* newNode = new Node(string(1, ch));
+			expressionStk.push(newNode);
+		}
+	}
+	// The root of the expression tree will be the last node remaining on the stack
+	       return expressionStk.top();
+
+}
+
+int main() 
+{
+	// Input the expression
+	string Expression;
+
+	cout << "Enter an expression: ";
+	getline(cin, Expression);
+
+	// Build the expression tree
+	Node* root = buildExpressionTree(Expression);
+
+	// Evaluate the expression
+	int result = evaluateExpression(root);
+
+	// Print the result
+	cout << "Result: " << result << endl;
+	system("pause");
+	return 0;
+}
