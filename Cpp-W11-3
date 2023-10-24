@@ -1,0 +1,91 @@
+//3- binary search trees
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Node structure for BST
+struct Node {
+	string name;
+	string phoneNumber;
+	Node* left;
+	Node* right;
+
+	Node(string n, string p) : name(n), phoneNumber(p), left(nullptr), right(nullptr) {}
+};
+
+ //Binary Search Tree class
+class Phonebook {
+private:
+	Node* root;
+
+	// Helper function to insert a new node
+	Node* insertNode(Node* root, string name, string phoneNumber)
+	{
+		if (root == nullptr) 
+		{
+			root = new Node(name, phoneNumber);
+			return root;
+		}
+
+		if (name < root->name)
+			root->left = insertNode(root->left, name, phoneNumber);
+
+		else if (name > root->name)
+			root->right = insertNode(root->right, name, phoneNumber);
+
+		return root;
+	}
+
+	// Helper function to search for a node
+	Node* searchNode(Node* root, string name) 
+	{
+		if (root == nullptr || root->name == name)
+			return root;
+
+		if (name < root->name)
+			return searchNode(root->left, name);
+		else
+			return searchNode(root->right, name);
+	}
+
+public:
+	Phonebook() : root(nullptr) {}
+
+	// Function to insert a new contact
+	
+	void addContact(string name, string phoneNumber) 
+	{
+		root = insertNode(root, name, phoneNumber);
+	}
+
+
+	// Function to search for a contact
+	void searchContact(string name) 
+	{
+		Node* result = searchNode(root, name);
+
+		if (result == nullptr)
+			cout << "Contact not found." << endl;
+
+		else
+	cout << "Name: " << result->name << ", Phone Number: " << result->phoneNumber << endl;
+	}
+};
+
+int main() {
+	Phonebook phonebook;
+
+	// Adding contacts
+	phonebook.addContact("Arda", "1234567890");
+	phonebook.addContact("Bora", "9876543210");
+	phonebook.addContact("Canan", "5555555555");
+
+	// Searching for contacts
+	phonebook.searchContact("Arda");    // Found
+	phonebook.searchContact("Bora");      // Found
+	phonebook.searchContact("Canan");  // Found
+	phonebook.searchContact("Deniz");    // Not found
+	system("pause");
+	return 0;
+}
