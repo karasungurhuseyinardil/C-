@@ -1,0 +1,119 @@
+//// 5- breadth first traverse without queue
+#include <iostream>
+#include <algorithm>
+using namespace std;
+// Node structure for binary tree
+struct Node {
+	int data;
+	Node* left;
+	Node* right;
+
+	Node(int value) {
+		data = value;
+		left = nullptr;
+		right = nullptr;
+	}
+};
+
+// Helper function to calculate the height of a binary tree
+int calculateHeight(Node* root) 
+{
+	if (root == nullptr)
+		return 0;
+
+	int leftHeight = calculateHeight(root->left);
+
+	int rightHeight = calculateHeight(root->right);
+
+	return max(leftHeight, rightHeight) + 1;
+}
+
+// Helper function to print nodes at a given level of the tree
+void printNodesAtLevel(Node* root, int level) 
+{
+	if (root == nullptr)
+		return;
+
+	if (level == 1)
+		cout << root->data << " ";
+
+	else if (level > 1) 
+	{
+		printNodesAtLevel(root->left, level - 1);
+
+		printNodesAtLevel(root->right, level - 1);
+	}
+}
+
+// Function to perform breadth-first traversal
+void breadthFirstTraversal(Node* root) 
+{
+	int height = calculateHeight(root);
+
+	for (int level = 1; level <= height; ++level) 
+	{
+		printNodesAtLevel(root, level);
+	}
+}
+
+int main() {
+	// Create a binary tree
+	Node* root = new Node(1);
+	root->left = new Node(2);
+	root->right = new Node(3);
+	root->left->left = new Node(4);
+	root->left->right = new Node(5);
+	root->right->left = new Node(6);
+	root->right->right = new Node(7);
+
+	cout << "Breadth-first traversal: ";
+	breadthFirstTraversal(root);
+	system("pause");
+	return 0;
+}
+
+////6 - depth-first search 
+#include <iostream>
+using namespace std;
+// Node structure for binary tree
+struct Node {
+	int data;
+	Node* left;
+	Node* right;
+
+	Node(int value) {
+		data = value;
+		left = nullptr;
+		right = nullptr;
+	}
+};
+
+// Function to perform depth-first search (in-order traversal)
+void depthFirstSearch(Node* root) 
+{
+	if (root == nullptr)
+		return;
+
+	depthFirstSearch(root->left);
+
+	cout << root->data << " ";
+
+	depthFirstSearch(root->right);
+}
+
+int main() {
+	// Create a binary tree
+	Node* root = new Node(1);		  
+	root->left = new Node(2);	 	
+	root->right = new Node(3);
+	root->left->left = new Node(4);
+	root->left->right = new Node(5);
+	root->right->left = new Node(6);
+	root->right->right = new Node(7);
+
+	
+	cout << "Depth-first search (in-order traversal): ";
+	depthFirstSearch(root);
+	system("pause");
+	return 0;
+}
