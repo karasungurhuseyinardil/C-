@@ -1,0 +1,128 @@
+d////////1 -The Priority Queue ADT 
+#include <iostream>
+#include <vector>
+using namespace std;
+class PriorityQueue {
+private:
+	vector<int> heap;
+
+	void heapifyUp(int index) {
+		while (index > 0) 
+		{
+			int parent = (index - 1) / 2;
+			if (heap[index] < heap[parent])
+			{
+				swap(heap[index], heap[parent]);
+				index = parent;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	void heapifyDown(int index) {	
+		int size = heap.size();		   
+								
+		while (index < size) {
+			int leftChild = 2 * index + 1;
+			int rightChild = 2 * index + 2;
+			int smallest = index;
+
+			if (leftChild < size && heap[leftChild] < heap[smallest])
+			{
+				smallest = leftChild;
+			}
+
+			if (rightChild < size && heap[rightChild] < heap[smallest]) {
+				smallest = rightChild;
+			}
+
+			if (smallest != index) 
+			{
+				swap(heap[index], heap[smallest]);
+				index = smallest;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+public:
+	void insert(int value) {
+		heap.push_back(value);
+		heapifyUp(heap.size() - 1);
+	}
+
+	int min() const {
+		if (heap.empty()) {
+			cout << "Priority Queue is empty!" << endl;
+			return -1;  // Return a default value indicating an error or empty state
+		}
+
+		return heap[0];
+	}
+
+	void removeMin() {
+		if (heap.empty()) {
+			cout << "Priority Queue is empty!" << endl;
+			return;
+		}
+
+		swap(heap[0], heap[heap.size() - 1]);
+		heap.pop_back();
+		heapifyDown(0);
+	}
+
+	bool empty() const {
+		return heap.empty();
+	}
+
+	int size() const {
+		return heap.size();
+	}
+
+	void print() const {
+		if (heap.empty()) {
+			cout << "Priority Queue is empty!" << endl;
+			return;
+		}
+
+		cout << "Priority Queue elements: ";
+		for (int element : heap)
+		{
+			cout << element << " ";
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	PriorityQueue pq;
+
+	pq.insert(5);
+	pq.insert(2);
+	pq.insert(10);
+	pq.insert(1);
+
+	pq.print();
+
+	int minimum = pq.min();
+	if (minimum != -1) {
+		cout << "Minimum element: " << minimum << endl;
+	}
+
+	pq.removeMin();
+	pq.print();
+
+	minimum = pq.min();
+	if (minimum != -1) {
+		cout << "Minimum element: " << minimum << endl;
+	}
+
+	pq.removeMin();
+	pq.print();
+	system("pause");
+	return 0;
+}
