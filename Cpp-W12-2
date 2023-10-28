@@ -1,0 +1,112 @@
+////////2 - implementing a priority queue with a heap
+
+#include <iostream>
+#include <vector>
+#include <functional> 
+using namespace std;
+
+template <typename T, typename Compare = less<T>>
+class PriorityQueue {
+private:
+	vector<T> heap;
+	Compare compare;
+
+	void heapifyUp(int index) {
+		while (index > 0) {
+			int parent = (index - 1) / 2;
+			if (compare(heap[index], heap[parent])) {
+				swap(heap[index], heap[parent]);
+				index = parent;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	void heapifyDown(int index) {
+		int size = heap.size();
+		while (index < size) {
+			int leftChild = 2 * index + 1;
+			int rightChild = 2 * index + 2;
+			int smallest = index;
+
+			if (leftChild < size && compare(heap[leftChild], heap[smallest])) {
+				smallest = leftChild;
+			}
+
+			if (rightChild < size && compare(heap[rightChild], heap[smallest])) {
+				smallest = rightChild;
+			}
+
+			if (smallest != index) {
+				swap(heap[index], heap[smallest]);
+				index = smallest;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+public:
+	void insert(const T& value) {
+		heap.push_back(value);
+		heapifyUp(heap.size() - 1);
+	}
+
+	T removeMin() {
+		if (heap.empty()) {
+			cout << "Priority Queue is empty!" << endl;
+			return T(); // Return a default value indicating an error or empty state
+		}
+
+		T minValue = heap[0];
+		swap(heap[0], heap[heap.size() - 1]);
+		heap.pop_back();
+		heapifyDown(0);
+
+		return minValue;
+	}
+
+	bool empty() const {
+		return heap.empty();
+	}
+
+	int size() const {
+		return heap.size();
+	}
+
+	void print() const {
+		if (heap.empty()) {
+			cout << "Priority Queue is empty!" << endl;
+			return;
+		}
+
+		cout << "Priority Queue elements: ";
+		for (const T& element : heap) {
+			cout << element << " ";
+		}
+		cout << endl;
+	}
+};
+
+int main() {
+	PriorityQueue<int, greater<int>> pq;
+
+	pq.insert(5);
+	pq.insert(2);
+	pq.insert(10);
+	pq.insert(1);
+
+	pq.print();
+
+	int minValue = pq.removeMin();
+	if (minValue != -1) {
+		cout << "Minimum value: " << minValue << endl;
+	}
+
+
+	system("pause");
+	return 0;
+}
