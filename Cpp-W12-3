@@ -1,0 +1,123 @@
+/////////////// 3- complete binary tree
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template <typename E>
+class CompleteTree {
+public:
+	class Position {
+		int index;
+		CompleteTree* tree;
+
+	public:
+		Position(int idx = -1, CompleteTree* t = nullptr)
+			: index(idx), tree(t) {}
+
+		E& operator*() const {
+			return tree->tree[index];
+		}
+
+		Position left() const {
+			return Position(2 * index + 1, tree);
+		}
+
+		Position right() const {
+			return Position(2 * index + 2, tree);
+		}
+
+		Position parent() const {
+			return Position((index - 1) / 2, tree);
+		}
+
+		bool is_root() const {
+			return index == 0;
+		}
+
+		bool is_valid() const {
+			return tree != nullptr && index >= 0 && index < tree->size();
+		}
+
+		friend class CompleteTree;
+	};
+
+private:
+	vector<E> tree;
+
+public:
+	int size() const {
+		return tree.size();
+	}
+
+	Position left(const Position& p) {
+		return p.left();
+	}
+
+	Position right(const Position& p) 
+	{
+		return p.right();
+	}
+
+	Position parent(const Position& p) {
+		return p.parent();
+	}
+
+	bool hasLeft(const Position& p) const 
+	{
+		return p.left().is_valid();
+	}
+
+	bool hasRight(const Position& p) const {
+		return p.right().is_valid();
+	}
+
+	bool isRoot(const Position& p) const {
+		return p.is_root();
+	}
+
+	Position root() {
+		return Position(0, this);
+	}
+
+	Position last() {
+		return Position(tree.size() - 1, this);
+	}
+
+	void addLast(const E& e) 
+	{
+		tree.push_back(e);
+	}
+
+	void removeLast()
+	{
+		tree.pop_back();
+	}
+
+	void swap(const Position& p, const Position& q) 
+	{
+		E temp = *p;
+		*p = *q;
+		*q = temp;
+	}
+};
+
+int main() {
+	CompleteTree<int> tree;
+	tree.addLast(10);      
+	tree.addLast(20);	
+	tree.addLast(30);	
+	tree.addLast(40);
+	tree.addLast(50);
+
+	CompleteTree<int>::Position p = tree.root();
+	cout << "Elements in tree: ";
+	while (p.is_valid())
+	{
+		cout << *p << " ";
+		p = tree.right(p);
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
