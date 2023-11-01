@@ -1,0 +1,78 @@
+///////5 - MAP
+#include <iostream>
+#include <map>
+#include<string>
+using namespace std;
+
+// Function to display the contents of the map
+void displayMap(const map<int, string>& myMap)
+{
+	for (const auto& pair : myMap) 
+	{
+		cout << "Key: " << pair.first << ", Value: " << pair.second << endl;
+	}
+}
+
+
+// Function to search for a key in the map
+void searchKey(const map<int, string>& myMap, int key)
+{
+	auto it = myMap.find(key);
+
+	if (it != myMap.end()) 
+	{
+		cout << "Key: " << it->first << ", Value: " << it->second << endl;
+	}
+	else {
+		cout << "Key not found." << endl;
+	}
+}
+
+
+// Function to insert a key-value pair into the map
+void insertPair(map<int, string>& myMap, int key, const string& value) 
+{
+	myMap[key] = value;
+	cout << "Key-value pair inserted successfully." << endl;
+}
+
+// Function to remove a key-value pair from the map
+void removePair(map<int, string>& myMap, int key)
+{
+	auto it = myMap.find(key);
+
+	if (it != myMap.end()) 
+	{
+		myMap.erase(it);
+		cout << "Key-value pair removed successfully." << endl;
+	}
+	else {
+		cout << "Key not found." << endl;
+	}
+}
+
+int main() 
+{
+	map<int, string> myMap;
+
+	// Inserting key-value pairs into the map
+	insertPair(myMap, 1, "Value 1");
+	insertPair(myMap, 2, "Value 2");
+	insertPair(myMap, 3, "Value 3");
+
+	// Displaying the contents of the map
+	cout << "Map contents:" << endl;
+	displayMap(myMap);
+
+	// Searching for a key in the map
+	searchKey(myMap, 2);
+
+	// Removing a key-value pair from the map
+	removePair(myMap, 1);
+
+	// Displaying the updated contents of the map
+	cout << "Updated map contents:" << endl;
+	displayMap(myMap);
+	system("pause");
+	return 0;
+}
