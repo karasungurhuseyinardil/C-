@@ -1,0 +1,147 @@
+///// 1- AVL TREES
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Node {
+	int key;
+	Node* left;
+	Node* right;
+	int height;
+};
+// Function to get the height of a node
+int getHeight(Node* node) 
+{
+	if (node == nullptr) 
+	{
+		return 0;
+	}
+	return node->height;
+}
+
+ //Function to calculate the balance factor of a node
+int getBalanceFactor(Node* node) {
+	if (node == nullptr) {
+		return 0;
+	}
+	return getHeight(node->left) - getHeight(node->right);
+}
+
+ // Function to update the height of a node
+void updateHeight(Node* node) 
+{
+	int leftHeight = getHeight(node->left);
+	int rightHeight = getHeight(node->right);
+	node->height = 1 + max(leftHeight, rightHeight);
+}
+
+	// Function to perform a right rotation
+Node* rotateRight(Node* y) 
+{
+	Node* x = y->left;
+	Node* T2 = x->right;
+	x->right = y;
+	y->left = T2;
+	updateHeight(y);
+	updateHeight(x);
+	return x;
+}
+ // Function to perform a left rotation
+Node* rotateLeft(Node* x) 
+{
+	Node* y = x->right;
+	Node* T2 = y->left;
+	y->left = x;
+	x->right = T2;
+	updateHeight(x);
+	updateHeight(y);
+	return y;
+}
+
+// Function to insert a node into the AVL tree
+Node* insertNode(Node* root, int key) 
+{
+	if (root == nullptr)
+	{
+		Node* newNode = new Node();
+		newNode->key = key;
+		newNode->left = nullptr;
+		newNode->right = nullptr;
+		newNode->height = 1;
+		return newNode;
+	}
+
+	if (key < root->key) 
+	{
+		root->left = insertNode(root->left, key);
+	}
+	else if (key > root->key)
+	{
+		root->right = insertNode(root->right, key);
+	}
+	else {
+		// Duplicate keys are not allowed in AVL trees
+		return root;
+	}
+
+	updateHeight(root);
+
+	int balanceFactor = getBalanceFactor(root);
+
+	// Left Left Case
+	if (balanceFactor > 1 && key < root->left->key)
+	{
+		return rotateRight(root);
+	}
+
+	// Right Right Case
+	if (balanceFactor < -1 && key > root->right->key)
+	{
+		return rotateLeft(root);
+	}
+
+	// Left Right Case
+	if (balanceFactor > 1 && key > root->left->key) 
+	{
+		root->left = rotateLeft(root->left);
+		return rotateRight(root);
+	}
+
+	// Right Left Case
+	if (balanceFactor < -1 && key < root->right->key) 
+	{
+		root->right = rotateRight(root->right);
+		return rotateLeft(root);
+	}
+
+	return root;
+}
+
+// Function to perform an inorder traversal of the AVL tree
+void inorderTraversal(Node* root) 
+{
+	if (root == nullptr) {
+		return;
+	}
+
+	inorderTraversal(root->left);
+	cout << root->key << " ";
+	inorderTraversal(root->right);
+}
+
+int main() {
+	Node* root = nullptr;
+
+	root = insertNode(root, 10);		 
+	root = insertNode(root, 20);	
+	root = insertNode(root, 30);
+	root = insertNode(root, 40);
+	root = insertNode(root, 50);
+	root = insertNode(root, 25);
+
+	cout << "Inorder traversal of the AVL tree: ";
+	inorderTraversal(root);
+	cout << endl;
+	system("pause;");
+	return 0;
+}
