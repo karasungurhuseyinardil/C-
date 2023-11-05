@@ -1,0 +1,171 @@
+/////2 - SPLAY TREES
+
+#include <iostream>
+using namespace std;
+
+struct Node {
+	int key;
+	Node* left;
+	Node* right;
+};
+
+// Function to create a new node
+Node* createNode(int key) {
+	Node* newNode = new Node();
+	newNode->key = key;
+	newNode->left = nullptr;
+	newNode->right = nullptr;
+	return newNode;
+}
+
+// Function to perform a left rotation
+Node* leftRotate(Node* x) 
+{
+	Node* y = x->right;
+	x->right = y->left;
+	y->left = x;
+	return y;
+}
+
+// Function to perform a right rotation
+Node* rightRotate(Node* x) {
+	Node* y = x->left;
+	x->left = y->right;
+	y->right = x;
+	return y;
+}
+
+// Function to perform the splay operation
+Node* splay(Node* root, int key)
+{
+	if (root == nullptr || root->key == key)
+	{
+		return root;
+	}
+
+	if (root->key > key)
+	{
+		if (root->left == nullptr) 
+		{
+			return root;
+		}
+		if (root->left->key > key) {
+			// (Left Left)
+			root->left->left = splay(root->left->left, key);
+			root = rightRotate(root);
+		}
+		else if (root->left->key < key) 
+		{
+			// (Left Right)
+			root->left->right = splay(root->left->right, key);
+
+			if (root->left->right != nullptr) 
+			{
+				root->left = leftRotate(root->left);
+			}
+		}
+
+		if (root->left != nullptr)
+		{
+			root = rightRotate(root);
+		}
+		
+	return (root->left == nullptr) ? root : leftRotate(root);
+	}
+
+	else {
+		if (root->right == nullptr) {
+			return root;
+		}
+		if (root->right->key > key)
+		{
+		// (Right Left)
+			root->right->left = splay(root->right->left, key);
+			if (root->right->left != nullptr)
+			{
+				root->right = rightRotate(root->right);
+			}
+		}
+		else if (root->right->key < key) {
+			// (Right Right)
+			root->right->right = splay(root->right->right, key);
+			root = leftRotate(root);
+		}
+
+		if (root->right != nullptr) 
+		{
+			root = leftRotate(root);
+		}
+		return (root->right == nullptr) ? root : rightRotate(root);
+	}
+}
+
+// Function to search for a key in the Splay tree
+Node* search(Node* root, int key) {
+	return splay(root, key);
+}
+
+// Function to insert a key into the Splay tree
+Node* insert(Node* root, int key) 
+{
+	if (root == nullptr) {
+		return createNode(key);
+	}
+
+	root = splay(root, key);
+
+	if (root->key == key) {
+		return root;
+	}
+
+	Node* newNode = createNode(key);
+
+	if (root->key > key) {
+		newNode->right = root;
+		newNode->left = root->left;
+		root->left = nullptr;
+	}
+	else {
+		newNode->left = root;
+		newNode->right = root->right;
+		root->right = nullptr;
+	}
+
+	return newNode;
+}
+
+// Function to perform an inorder traversal of the Splay tree
+void inorderTraversal(Node* root) {
+	if (root == nullptr) {
+		return;
+	}
+
+	inorderTraversal(root->left);
+	cout << root->key << " ";
+	inorderTraversal(root->right);
+}
+
+int main() {
+	Node* root = nullptr;
+
+	root = insert(root, 10);  
+	root = insert(root, 5); 
+	root = insert(root, 15);
+	root = insert(root, 3);
+	root = insert(root, 7);
+
+	cout << "Inorder traversal of the Splay tree: ";
+	inorderTraversal(root);
+	cout << endl;
+
+	Node* searchResult = search(root, 5);
+	cout << "Key 5 is ";
+	if (searchResult != nullptr) {
+		cout << "found!" << endl;
+	}
+	else {
+		cout << "not found!" << endl;
+	}
+	system("pause");
+	return 0;
+}
