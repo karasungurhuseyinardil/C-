@@ -1,0 +1,190 @@
+///// 4 - RED BLACK TREES
+#include <iostream>
+using namespace std;
+enum Color { RED, BLACK };
+
+struct Node {
+	int key;
+	Color color;
+	Node* left;
+	Node* right;
+	Node* parent;
+
+	// Constructor
+Node(int key) : key(key), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
+};
+
+class RedBlackTree {
+private:
+	Node* root;
+
+	void rotateLeft(Node* x)
+	{
+		Node* y = x->right;
+		x->right = y->left;
+
+		if (y->left != nullptr)
+			y->left->parent = x;
+
+		y->parent = x->parent;
+
+		if (x->parent == nullptr)
+			root = y;
+
+		else if (x == x->parent->left)
+			x->parent->left = y;
+		else
+			x->parent->right = y;
+
+		y->left = x;
+		x->parent = y;
+	}
+
+	void rotateRight(Node* x) {
+		Node* y = x->left;
+		x->left = y->right;
+
+		if (y->right != nullptr)
+			y->right->parent = x;
+
+		y->parent = x->parent;
+
+		if (x->parent == nullptr)
+			root = y;
+		else if (x == x->parent->left)
+			x->parent->left = y;
+		else
+			x->parent->right = y;
+
+		y->right = x;
+		x->parent = y;
+	}
+
+	void fixViolation(Node* newNode) {
+		Node* parent = nullptr;
+		Node* grandParent = nullptr;
+
+while (newNode != root && newNode->color == RED && newNode->parent->color == RED) 
+{
+			parent = newNode->parent;
+			grandParent = newNode->parent->parent;
+
+			if (parent == grandParent->left) {
+				Node* uncle = grandParent->right;
+
+				if (uncle != nullptr && uncle->color == RED) {
+					grandParent->color = RED;
+					parent->color = BLACK;
+					uncle->color = BLACK;
+					newNode = grandParent;
+				}
+				else {
+					if (newNode == parent->right) {
+						rotateLeft(parent);
+						newNode = parent;
+						parent = newNode->parent;
+					}
+
+					rotateRight(grandParent);
+					swap(parent->color, grandParent->color);
+					newNode = parent;
+				}
+			}
+			else {
+				Node* uncle = grandParent->left;
+
+				if (uncle != nullptr && uncle->color == RED) {
+					grandParent->color = RED;
+					parent->color = BLACK;
+					uncle->color = BLACK;
+					newNode = grandParent;
+				}
+				else {
+					if (newNode == parent->left) {
+						rotateRight(parent);
+						newNode = parent;
+						parent = newNode->parent;
+					}
+
+					rotateLeft(grandParent);
+					swap(parent->color, grandParent->color);
+					newNode = parent;
+				}
+			}
+		}
+
+		root->color = BLACK;
+	}
+
+	void insertHelper(Node* node, Node* newNode) {
+		if (newNode->key < node->key) 
+		{
+			if (node->left != nullptr)
+				insertHelper(node->left, newNode);
+			else {
+				node->left = newNode;
+				newNode->parent = node;
+			}}
+		else if (newNode->key > node->key) {
+			if (node->right != nullptr)
+				insertHelper(node->right, newNode);
+			else {
+				node->right = newNode;
+				newNode->parent = node;
+			}}
+
+		fixViolation(newNode);
+	}
+
+	void inorderHelper(Node* node) {
+		if (node == nullptr)
+			return;
+
+		inorderHelper(node->left);
+		cout << node->key << " ";
+		inorderHelper(node->right);
+	}
+
+public:
+	// Constructor
+	RedBlackTree() : root(nullptr) {}
+
+	void insert(int key) 
+	{
+		Node* newNode = new Node(key);
+
+		if (root == nullptr) {
+			newNode->color = BLACK;
+			root = newNode;
+		}
+		else
+			insertHelper(root, newNode);
+	}
+
+	void printInorder() {
+		inorderHelper(root);
+		cout << endl;
+	}
+};
+
+int main() {
+	RedBlackTree tree;
+
+	tree.insert(7);
+	tree.insert(3);	
+	tree.insert(18);
+	tree.insert(10);
+	tree.insert(22);
+	tree.insert(8);
+	tree.insert(11);
+	tree.insert(26);
+	tree.insert(2);
+	tree.insert(6);
+	tree.insert(13);
+
+	cout << "Inorder Traversal of Red Black Tree: ";
+	tree.printInorder();
+	system("pause");
+	return 0;
+}
+
